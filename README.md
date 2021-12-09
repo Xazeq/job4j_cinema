@@ -9,5 +9,5 @@
 * HTML, BOOTSTRAP, JS, JQUERY, AJAX
 * Slf4j, Log4j
 
-![ScreenShot](images/1.JPG)
-![ScreenShot](images/2.JPG)
+![ScreenShot](images/1.jpg)
+![ScreenShot](images/2.jpg)
