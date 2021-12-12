@@ -65,8 +65,14 @@
                 phone: $('#phone').val(),
                 row: row,
                 cell: cell
+            },
+            dataType: 'text'
+        }).done(function (data) {
+            if (data === "true") {
+                alert('Билет забронирован!');
+            } else {
+                alert('Ошибка! Выбранное место уже забронировано!');
             }
-        }).done(function () {
             return window.location.href = 'http://localhost:8080/cinema/index.html';
         }).fail(function (err) {
             console.log(err);

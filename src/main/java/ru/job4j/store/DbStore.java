@@ -1,6 +1,7 @@
 package ru.job4j.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.model.Account;
@@ -12,6 +13,7 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -51,12 +53,13 @@ public class DbStore implements Store {
     }
 
     @Override
-    public void save(Account account) {
+    public Account save(Account account) {
         if (account.getId() == 0) {
             create(account);
         } else {
             update(account);
         }
+        return account;
     }
 
     private Account create(Account account) {
@@ -96,15 +99,16 @@ public class DbStore implements Store {
     }
 
     @Override
-    public void save(Ticket ticket) {
+    public Ticket save(Ticket ticket) throws SQLException {
         if (ticket.getId() == 0) {
-            create(ticket);
+            ticket = create(ticket);
         } else {
             update(ticket);
         }
+        return ticket;
     }
 
-    private Ticket create(Ticket ticket) {
+    private Ticket create(Ticket ticket) throws SQLException {
         try (Connection cn  = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
                      "INSERT INTO ticket(session_id, row, cell, account_id) VALUES (?, ?, ?, ?)",
@@ -120,8 +124,6 @@ public class DbStore implements Store {
                     ticket.setId(id.getInt(1));
                 }
             }
-        } catch (Exception e) {
-            LOG.error("Exception when create ticket", e);
         }
         return ticket;
     }
